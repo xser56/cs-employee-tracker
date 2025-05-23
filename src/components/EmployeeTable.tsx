@@ -24,6 +24,21 @@ const EmployeeTable = () => {
 
     const [sortBy, setSortBy] = useState("");
     const [sortByJob, setSortByJob] = useState("");
+    
+    // Pagination states
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(10);
+
+    // Get current employees
+    const indexOfLastEmployee = currentPage * itemsPerPage;
+    const indexOfFirstEmployee = indexOfLastEmployee - itemsPerPage;
+    const currentEmployees = sortedEmployees.slice(indexOfFirstEmployee, indexOfLastEmployee);
+    const totalPages = Math.ceil(sortedEmployees.length / itemsPerPage);
+
+    // Change page
+    const handlePageChange = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+    };
 
     // Function to get employees
     const handleGetEmployees = async () => {
@@ -203,7 +218,7 @@ const EmployeeTable = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {sortedEmployees.length === 0 ? (
+                    {currentEmployees.length === 0 ? (
                         <TableRow>
                             <TableCell></TableCell>
                             <TableCell className="text-center">
@@ -212,7 +227,7 @@ const EmployeeTable = () => {
                             <TableCell></TableCell>
                         </TableRow>
                     ) : (
-                        sortedEmployees.map((employee, idx) => (
+                        currentEmployees.map((employee, idx) => (
                             <TableRow key={idx}>
                                 <TableCell className="font-medium">{employee.name}</TableCell>
                                 <TableCell>{employee.jobTitle}</TableCell>
@@ -231,6 +246,37 @@ const EmployeeTable = () => {
                     )}
                 </TableBody>
             </Table>
+            
+            {/* Pagination */}
+            {sortedEmployees.length > 0 && (
+                <div className="flex justify-center gap-2 mt-4">
+                    <Button
+                        variant="outline"
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                    >
+                        Previous
+                    </Button>
+                    
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+                        <Button
+                            key={pageNumber}
+                            variant={currentPage === pageNumber ? "default" : "outline"}
+                            onClick={() => handlePageChange(pageNumber)}
+                        >
+                            {pageNumber}
+                        </Button>
+                    ))}
+                    
+                    <Button
+                        variant="outline"
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                    >
+                        Next
+                    </Button>
+                </div>
+            )}
             {/* Display table - End */}
         </>
     )

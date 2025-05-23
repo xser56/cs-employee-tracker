@@ -22,6 +22,8 @@ const TempComponent = ({ type, employee, refreshEmployees }: { type: 'Add' | 'Ed
         name: "",
         jobTitle: "",
         hireDate: "",
+        details: null,
+        status: null
     });
 
     const [token, setToken] = useState('');
@@ -42,7 +44,7 @@ const TempComponent = ({ type, employee, refreshEmployees }: { type: 'Add' | 'Ed
 
     const onCloseModal = () => {
         setOpenModal(false);
-        setEmployeeToChange({ id: 0, name: "", jobTitle: "", hireDate: "" });
+        setEmployeeToChange({ id: 0, name: "", jobTitle: "", hireDate: "", details: null, status: null });
     };
 
     // Change employee functions
@@ -101,6 +103,8 @@ const TempComponent = ({ type, employee, refreshEmployees }: { type: 'Add' | 'Ed
                 name: "",
                 jobTitle: "",
                 hireDate: "",
+                details: null,
+                status: null
             });
         } catch (error) {
             console.log("error", error);

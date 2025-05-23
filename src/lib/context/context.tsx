@@ -2,18 +2,18 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
-interface AppContext {
+interface AppContextType {
     isLoggedIn: boolean;
     setIsLoggedIn: (bool: boolean) => void;
     employeeId: number;
     setEmployeeId: (id: number) => void;
 }
 
-const AppContext = createContext<AppContext>({
+const AppContext = createContext<AppContextType>({
     isLoggedIn: false,
-    setIsLoggedIn: (bool: boolean) => '',
+    setIsLoggedIn: () => {},
     employeeId: 0,
-    setEmployeeId: (id: number) => {}
+    setEmployeeId: () => {}
 });
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
@@ -23,19 +23,19 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const checkLogin = () => {
             let loggedIn = false;
-
-            if(localStorage.getItem('user')) loggedIn = true;
-            if(sessionStorage.getItem('user')) loggedIn = true;
-        
+            if (localStorage.getItem('user') || sessionStorage.getItem('user')) {
+                loggedIn = true;
+            }
             setIsLoggedIn(loggedIn);
-        }
-
+        };
         checkLogin();
-    }, [])
+    }, []);
 
     return (
-        <AppContext.Provider value={ { isLoggedIn, setIsLoggedIn, employeeId, setEmployeeId } } />
-    )
-}
+        <AppContext.Provider value={{ isLoggedIn, setIsLoggedIn, employeeId, setEmployeeId }}>
+            {children}
+        </AppContext.Provider>
+    );
+};
 
 export const useAppContext = () => useContext(AppContext);

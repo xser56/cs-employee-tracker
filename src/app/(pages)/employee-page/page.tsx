@@ -44,7 +44,7 @@ const page = () => {
     }, [token, employeeId])
 
     return (
-        <div className="min-h-screen flex flex-col justify-center max-w-3xl mx-auto">
+        <div className="min-h-screen flex flex-col justify-center max-w-3xl mx-auto ">
             <Card>
                 <CardHeader>
                     <CardTitle className="text-2xl font-bold text-black">
