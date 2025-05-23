@@ -117,7 +117,7 @@ const EmployeeTable = () => {
 
     // Sorting the employees
     useEffect(() => {
-        const sortingEmployees = employees;
+        const sortingEmployees = [...employees]; // Create a new array to avoid mutating state directly
 
         const handleSorting = () => {
             switch (sortBy) {
@@ -138,8 +138,10 @@ const EmployeeTable = () => {
                     );
                     break;
                 case "job-title":
-                    sortingEmployees.filter((employee: Employee) => employee.jobTitle == sortByJob);
-                    break;
+                    // Fix the filtering logic
+                    const filtered = sortingEmployees.filter((employee: Employee) => employee.jobTitle === sortByJob);
+                    setSortedEmployees(filtered);
+                    return; // Exit early as we've already set the sorted employees
                 default:
                     sortingEmployees.sort((a: Employee, b: Employee) => a.id - b.id);
                     break;

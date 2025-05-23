@@ -12,6 +12,7 @@ import { Calendar } from './ui/calendar';
 import { CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 
 // Valid values for type: "Add" & "Edit"
@@ -24,14 +25,16 @@ const EmployeeModal = ({ type, employee, refreshEmployees }: { type: 'Add' | 'Ed
         name: "",
         jobTitle: "",
         hireDate: "",
+        details: null,
+        status: null
     });
 
     const [token, setToken] = useState('');
 
     const disableBtn =
-        employeeToChange.name.trim() != "" ||
-        employeeToChange.jobTitle.trim() != "" &&
-        employeeToChange.hireDate != "";
+        employeeToChange.name.trim() === "" ||
+        employeeToChange.jobTitle.trim() === "" ||
+        employeeToChange.hireDate === "";
 
     // Modal Functions
     const onOpenModal = () => {
@@ -44,7 +47,14 @@ const EmployeeModal = ({ type, employee, refreshEmployees }: { type: 'Add' | 'Ed
 
     const onCloseModal = () => {
         setOpenModal(false);
-        setEmployeeToChange({ id: 0, name: "", jobTitle: "", hireDate: "" });
+        setEmployeeToChange({ 
+            id: 0, 
+            name: "", 
+            jobTitle: "", 
+            hireDate: "",
+            details: null,
+            status: null
+        });
     };
 
     // Change employee functions
@@ -52,6 +62,13 @@ const EmployeeModal = ({ type, employee, refreshEmployees }: { type: 'Add' | 'Ed
         setEmployeeToChange({
             ...employeeToChange,
             [e.target.id]: e.target.value,
+        });
+    };
+
+    const handleJobTitleChange = (value: string) => {
+        setEmployeeToChange({
+            ...employeeToChange,
+            jobTitle: value,
         });
     };
 
@@ -103,6 +120,8 @@ const EmployeeModal = ({ type, employee, refreshEmployees }: { type: 'Add' | 'Ed
                 name: "",
                 jobTitle: "",
                 hireDate: "",
+                details: null,
+                status: null
             });
         } catch (error) {
             console.log("error", error);
@@ -161,11 +180,21 @@ const EmployeeModal = ({ type, employee, refreshEmployees }: { type: 'Add' | 'Ed
                             <div className="mb-2 block">
                                 <Label htmlFor="jobTitle">Job title</Label>
                             </div>
-                            <Input
-                                id="jobTitle"
+                            <Select
                                 value={employeeToChange.jobTitle}
-                                onChange={handleEmployeeToChange}
-                            />
+                                onValueChange={handleJobTitleChange}
+                            >
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select a job title" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="Customer Support">Customer Support</SelectItem>
+                                        <SelectItem value="IT Support Specialist">IT Support Specialist</SelectItem>
+                                        <SelectItem value="Software Engineer">Software Engineer</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
                     <div>
